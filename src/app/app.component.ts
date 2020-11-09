@@ -23,7 +23,7 @@ ngOnInit(): void {
   circle5.fill = '#1111FF';
 
   let rect = two.makeRectangle(20,50,50,20);
-  rect.fill = '#BB00FF';
+  rect.fill = '#BB01FF';
   let rect2 = two.makeRectangle(40,90,20,50);
   rect2.fill = '#AABBCC';
   let rect3 = two.makeRectangle(70,100,20,20);
