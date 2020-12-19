@@ -38,7 +38,7 @@ export class SpriteService {
       lastDirection: 'right',
       maxSpeed: 10,
       acceleration: 1,
-      scale: 1,
+      scale: .7,
       playable: true,
       url: '../assets/Sprites/birb.png',
       fps: 7,
