@@ -1,40 +1,54 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import Two from "../assets/two.min.js";
+import { Sprite, SpriteService } from './services/sprite.service.js';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
+
+  x: number=200;
+  y: number=200;
+  
+  constructor(private _spriteService: SpriteService){}
+
+  @HostListener('document:keydown', ['$event'])
+  handlekey(event: KeyboardEvent) {
+    if (event.key=='ArrowRight') {
+      this.x=this.x+10;
+    }
+    if (event.key=='ArrowLeft') {
+      this.x=this.x-10;
+    }
+    if (event.key=='ArrowUp') {
+      this.y=this.y-10;
+    }
+    if (event.key=='ArrowDown') {
+      this.y=this.y+10
+    }
+  }
+
 ngOnInit(): void {
   let elem = document.getElementById('draw-shapes');
   let params = {fullscreen: true};
   let two = new Two(params).appendTo(elem);
 
-  //let rectangle = two.makeRectangle(300,200,70,30)
-  
-  let circle = two.makeCircle(200,70,50)
+  for (let i=0; i<this._spriteService.sprites.length; i++) {
+    //console.log(this._spriteService.sprites[i]);
+    let sprite=this._spriteService.sprites[i];
+    this._spriteService.sprites[i].spriteReference=two.makeSprite(sprite.url, sprite.x, sprite.y, sprite.columns, sprite.rows, sprite.fps);
+    this._spriteService.sprites[i].spriteReference.play();
+    //this._spriteService.sprites[i].spriteReference.scale=.5;
+  }
 
-  //let ellipse = two.makeEllipse(500,200,50,30)
-  //ellipse.fill = "#FF00CC"
-  //let star = two.makeStar(550,300,30,70,5)
-  
-  let scaleDelta = 0.1
-
+  //rectangle.scale=.7;
   two.bind('update', (framesPerSecond)=>{
-    //let changeintime = Date.now()/1000;
-    circle.scale = circle.scale+scaleDelta
-    if (circle.scale > 5) {
-      scaleDelta = -.01
-    }
-    if (circle.scale < 0.5) {
-      scaleDelta = .01
-    }
-    //rectangle.rotation = 5*changeintime%Math.PI;
-    //ellipse.rotation = 10*changeintime%Math.PI;
-  }).play();
-
+    // this is where animatoin happens
+    this._spriteService.sprites[0].spriteReference.translation.x=this.x;
+    this._spriteService.sprites[0].spriteReference.translation.y=this.y;
+  }).play(); 
 
 }
-  title = 'game';
+  //title = 'game';
 }
