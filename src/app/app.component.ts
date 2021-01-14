@@ -83,7 +83,7 @@ export class AppComponent implements OnInit {
     }).play();
   }
 
-  title = 'BabyShark';
+  title = 'Birb';
 
 
 }

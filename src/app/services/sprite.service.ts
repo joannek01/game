@@ -41,7 +41,7 @@ export class SpriteService {
       scale: 1.5,
       playable: true,
       url: '../assets/Sprites/birb.png',
-      fps: 2,
+      fps: 4,
       x: 200,
       y: 200,
       rows: 2,
