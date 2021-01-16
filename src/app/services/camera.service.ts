@@ -7,8 +7,8 @@ export class CameraService {
   max_x: number = 0;
   max_y: number = 0;
 
-  diff_x: number = 320;
-  diff_y: number = 150;
+  diff_x: number = 650;
+  diff_y: number = 300;
 
   constructor() { }
   

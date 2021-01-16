@@ -50,13 +50,16 @@ export class AppComponent implements OnInit {
 
     this._cameraService.init(this.max_x,this.max_y);
 
+    this._spriteService.populateCloud (3);
+    this._spriteService.populateCoin (10);
+
     //loop through service
     for (let i=0; i<this._spriteService.sprites.length; i++) {
       let sprite=this._spriteService.sprites[i];
       this._spriteService.sprites[i].spriteReference=two.makeSprite(sprite.url, sprite.x, sprite.y, sprite.columns, sprite.rows, sprite.fps);
       this._spriteService.sprites[i].spriteReference.play(this._spriteService.sprites[i].rightFrames[0], this._spriteService.sprites[i].rightFrames[1]);
       this._spriteService.sprites[i].spriteReference.scale=this._spriteService.sprites[i].scale;
-    }
+    };
     //rectangle.scale=.7;
     two.bind('update', (framesPerSecond)=>{
       // this is where animatoin happens
