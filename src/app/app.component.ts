@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import Two from '../assets/two.min.js';
 import { AiService } from './services/ai.service.js';
 import { CameraService } from './services/camera.service.js';
+import { MapService } from './services/map.service.js';
 import { Sprite, SpriteService } from './services/sprite.service.js';
 
 @Component({
@@ -19,7 +20,7 @@ export class AppComponent implements OnInit {
   max_x: number= 3500;
   max_y: number= 2500;
 
-  constructor(private _spriteService: SpriteService, private _cameraService: CameraService, private _aiService: AiService) {}
+  constructor(private _spriteService: SpriteService, private _cameraService: CameraService, private _aiService: AiService, private _mapService: MapService) {}
 
   @HostListener('document:keydown', ['$event'])
   handleKey(event: any) {
@@ -43,9 +44,8 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     let elem = document.getElementById('map');
     let params = {
-      width: this.max_x+'px',
-      height: this.max_y+'px'
-
+      width: this._mapService.MAX_X,
+      height: this._mapService.MAX_Y
     };
     let two = new Two(params).appendTo(elem);
 
@@ -53,6 +53,7 @@ export class AppComponent implements OnInit {
 
     this._spriteService.populateCloud (3);
     this._spriteService.populateCoin (10);
+    this._mapService.init(two);
 
     //loop through service
     for (let i=0; i<this._spriteService.sprites.length; i++) {
