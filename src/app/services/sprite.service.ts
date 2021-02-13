@@ -50,16 +50,36 @@ export class SpriteService {
     rightFrames: [0, 3]
   };
   cloud:Sprite={
-  name: 'Cloud',
+    name: 'Cloud',
+    visibility: true,
+    state: 0,
+    direction: 'right',
+    lastDirection: 'right',
+    maxSpeed: 0,
+    acceleration: 0,
+    scale: 3,
+    playable: true,
+    url: '../assets/Sprites/cloud.png',
+    fps: 0,
+    x: 200,
+    y: 200,
+    rows: 1,
+    columns: 1,
+    spriteReference: null,
+    leftFrames: [0, 0],
+    rightFrames: [0, 0]
+  };
+  madcloud:Sprite={
+  name: 'Madcloud',
   visibility: true,
   state: 0,
   direction: 'right',
   lastDirection: 'right',
   maxSpeed: 10,
   acceleration: 1,
-  scale: 1.5,
+  scale: 4,
   playable: false,
-  url: '../assets/Sprites/cloud.png',
+  url: '../assets/Sprites/madcloud.png',
   fps: 4,
   x: 200,
   y: 200,
@@ -68,8 +88,27 @@ export class SpriteService {
   spriteReference: null,
   leftFrames: [0, 3],
   rightFrames: [0, 3]
-  }
-
+  };
+    star:Sprite={
+    name: 'Star',
+    visibility: true,
+    state: 0,
+    direction: 'right',
+    lastDirection: 'right',
+    maxSpeed: 0,
+    acceleration: 0,
+    scale: 3,
+    playable: true,
+    url: '../assets/Sprites/star.png',
+    fps: 2,
+    x: 200,
+    y: 200,
+    rows: 2,
+    columns: 1,
+    spriteReference: null,
+    leftFrames: [0, 1],
+    rightFrames: [0, 1]
+  };
   sprites:Sprite[]=[
     {
       name: 'Birb',
@@ -103,14 +142,32 @@ export class SpriteService {
       this.coin.y = Math.floor(Math.random() * 50* i);
       this.sprites.push(JSON.parse(JSON.stringify(coin)));
     }
+  };
+
+  populateMadcloud(numberToPopulate: number) {
+    for (let i=0; i<numberToPopulate; i++) {
+      let Madcloud = this.madcloud;
+      this.madcloud.x = Math.floor(Math.random() * 50* i);
+      this.madcloud.y = Math.floor(Math.random() * 50* i);
+      this.sprites.push(JSON.parse(JSON.stringify(Madcloud)));
+    }
   }
 
   populateCloud(numberToPopulate: number) {
     for (let i=0; i<numberToPopulate; i++) {
-      let coin = this.coin;
+      let cloud = this.cloud;
       this.cloud.x = Math.floor(Math.random() * 50* i);
       this.cloud.y = Math.floor(Math.random() * 50* i);
-      this.sprites.push(JSON.parse(JSON.stringify(coin)));
+      this.sprites.push(JSON.parse(JSON.stringify(cloud)));
+    }
+  };
+
+  populateStar(numberToPopulate: number) {
+    for (let i=0; i<numberToPopulate; i++) {
+      let star = this.star;
+      this.star.x = Math.floor(Math.random() * 50* i);
+      this.star.y = Math.floor(Math.random() * 50* i);
+      this.sprites.push(JSON.parse(JSON.stringify(star)));
     }
   }
 }

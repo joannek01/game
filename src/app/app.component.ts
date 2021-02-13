@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import Two from '../assets/two.min.js';
 import { AiService } from './services/ai.service.js';
 import { CameraService } from './services/camera.service.js';
+import { CollisionService } from './services/collision.service.js';
 import { MapService } from './services/map.service.js';
 import { Sprite, SpriteService } from './services/sprite.service.js';
 
@@ -20,7 +21,7 @@ export class AppComponent implements OnInit {
   max_x: number= 3500;
   max_y: number= 2500;
 
-  constructor(private _spriteService: SpriteService, private _cameraService: CameraService, private _aiService: AiService, private _mapService: MapService) {}
+  constructor(private _spriteService: SpriteService, private _cameraService: CameraService, private _aiService: AiService, private _mapService: MapService, private _collisionService: CollisionService) {}
 
   @HostListener('document:keydown', ['$event'])
   handleKey(event: any) {
@@ -49,14 +50,16 @@ export class AppComponent implements OnInit {
     };
     let two = new Two(params).appendTo(elem);
 
+    this._mapService.init(two);
     this._cameraService.init(this.max_x,this.max_y);
 
-    this._spriteService.populateCloud (3);
-    this._spriteService.populateCoin (10);
-    this._mapService.init(two);
+    this._spriteService.populateMadcloud (3);
+    this._spriteService.populateCoin (100);
+    this._spriteService.populateCloud (2);
+    this._spriteService.populateStar (4);
 
     //loop through service
-    for (let i=0; i<this._spriteService.sprites.length; i++) {
+    for (let i=this._spriteService.sprites.length-1; i>=0; i--) {
       let sprite=this._spriteService.sprites[i];
       this._spriteService.sprites[i].spriteReference=two.makeSprite(sprite.url, sprite.x, sprite.y, sprite.columns, sprite.rows, sprite.fps);
       this._spriteService.sprites[i].spriteReference.play(this._spriteService.sprites[i].rightFrames[0], this._spriteService.sprites[i].rightFrames[1]);
@@ -73,7 +76,7 @@ export class AppComponent implements OnInit {
       this._cameraService.zoomCamera(this.x, this.y);
       
 
-        for (let i=0; i<this._spriteService.sprites.length; i++) {
+        for (let i=this._spriteService.sprites.length-1; i>=0; i--) {
           if (i>0) {
             this._spriteService.sprites[i]=this._aiService.basicAI(this._spriteService.sprites[i]);
             this._spriteService.sprites[i].spriteReference.translation.x = this._spriteService.sprites[i].x;
@@ -93,7 +96,7 @@ export class AppComponent implements OnInit {
     }).play();
   }
 
-  title = 'Birb';
+  title = 'Birbgame';
 
 
 }
