@@ -11,7 +11,7 @@ export class CollisionService {
   constructor(private _mapService: MapService) { }
 
   detectBorder(sprite: Sprite, newX: number, newY: number) {
-    const OFFSET = 2;
+    const OFFSET = 1;
 
     let width=sprite.spriteReference.width;
     let height = sprite.spriteReference.height;

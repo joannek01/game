@@ -147,8 +147,8 @@ export class SpriteService {
   populateMadcloud(numberToPopulate: number) {
     for (let i=0; i<numberToPopulate; i++) {
       let Madcloud = this.madcloud;
-      this.madcloud.x = Math.floor(Math.random() * 50* i);
-      this.madcloud.y = Math.floor(Math.random() * 50* i);
+      this.madcloud.x = Math.floor(Math.random() * 300* i);
+      this.madcloud.y = Math.floor(Math.random() * 300* i);
       this.sprites.push(JSON.parse(JSON.stringify(Madcloud)));
     }
   }
@@ -156,8 +156,8 @@ export class SpriteService {
   populateCloud(numberToPopulate: number) {
     for (let i=0; i<numberToPopulate; i++) {
       let cloud = this.cloud;
-      this.cloud.x = Math.floor(Math.random() * 50* i);
-      this.cloud.y = Math.floor(Math.random() * 50* i);
+      this.cloud.x = Math.floor(Math.random() * 300* i);
+      this.cloud.y = Math.floor(Math.random() * 300* i);
       this.sprites.push(JSON.parse(JSON.stringify(cloud)));
     }
   };
@@ -165,8 +165,8 @@ export class SpriteService {
   populateStar(numberToPopulate: number) {
     for (let i=0; i<numberToPopulate; i++) {
       let star = this.star;
-      this.star.x = Math.floor(Math.random() * 50* i);
-      this.star.y = Math.floor(Math.random() * 50* i);
+      this.star.x = Math.floor(Math.random() * 300* i);
+      this.star.y = Math.floor(Math.random() * 300* i);
       this.sprites.push(JSON.parse(JSON.stringify(star)));
     }
   }

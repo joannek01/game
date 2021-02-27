@@ -19,8 +19,8 @@ export class AppComponent implements OnInit {
   x: number=200;
   y: number=200;
 
-  max_x: number= 1500;
-  max_y: number= 1300;
+  max_x: number= 3000;
+  max_y: number= 3000;
 
   constructor(private _spriteService: SpriteService, 
     private _cameraService: CameraService, 
@@ -71,26 +71,33 @@ export class AppComponent implements OnInit {
     }
     
     two.bind('update', (framesPerSecond)=>{
-    
-
-    
-      if (this.x+60<this.max_x && this.x-70>0) {
+      if (!this._collisionService.detectBorder(this._spriteService.sprites[0], this.x, this.y)) { 
         this._spriteService.sprites[0].spriteReference.translation.x=this.x;
         this._spriteService.sprites[0].x = this.x;
-      } 
-      if (this.y+20<this.max_y && this.y-70>0) {
         this._spriteService.sprites[0].spriteReference.translation.y=this.y;
         this._spriteService.sprites[0].y = this.y;
+        this._cameraService.zoomCamera(this.x, this.y)
       } 
+      else {
+        this.x = this._spriteService.sprites[0].x
+        this.y = this._spriteService.sprites[0].y
+      }
       
-      this._cameraService.zoomCamera(this.x, this.y);
-        for (let i= this._spriteService.sprites.length-1; i>=0; i--) {
+    for (let i= this._spriteService.sprites.length-1; i>=0; i--) {
           if (i>0) {
             if (!this._spriteService.sprites[i]) continue
+            let oldX = this._spriteService.sprites[i].x
+            let oldY = this._spriteService.sprites[i].y
             this._spriteService.sprites[i] = this._aiService.basicAI(this._spriteService.sprites[i]);
+            if (!this._collisionService.detectBorder(this._spriteService.sprites[i], this._spriteService.sprites[i].x, this._spriteService.sprites[i].y)) {
             this._spriteService.sprites[i].spriteReference.translation.x = this._spriteService.sprites[i].x;
             this._spriteService.sprites[i].spriteReference.translation.y = this._spriteService.sprites[i].y;
             this._spriteService.sprites[i].spriteReference.scale = this._spriteService.sprites[i].scale;
+            }
+            else {
+              this._spriteService.sprites[i].x=oldX
+              this._spriteService.sprites[i].y=oldY
+            }
             this._collisionService.detectCollision(this._spriteService.sprites[0], this._spriteService.sprites[i]);
           }
         
