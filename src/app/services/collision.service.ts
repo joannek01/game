@@ -10,21 +10,21 @@ export class CollisionService {
 
   constructor(private _mapService: MapService) { }
 
-  detectBorder(sprite: Sprite, newX: number, newY: number) {
-    const OFFSET = 1;
+  detectBorder(sprite: Sprite, newX: number, newY: number, oldX: number, oldY: number) {
+    const OFFSET = 2;
+    let scale = sprite.scale;
+    let width = sprite.spriteReference.width*scale;
+    let height = sprite.spriteReference.height*scale;
 
-    let width=sprite.spriteReference.width;
-    let height = sprite.spriteReference.height;
-
-    let leftBound = sprite.x-(width/OFFSET);
-    let rightBound = sprite.x+(width/OFFSET);
-    let upperBound = sprite.y-(height/OFFSET);
-    let lowerBound = sprite.y+(height/OFFSET);
+    let leftBound = oldX-(width/OFFSET);
+    let rightBound = oldX-(width/OFFSET);
+    let upperBound = oldY-(height/OFFSET);
+    let lowerBound = oldY+(height/OFFSET);
   
-    if (leftBound<1 && newX<sprite.x) return true
-    if (rightBound>this._mapService.MAX_X && newX>sprite.x) return true
-    if (upperBound<1 && newY<sprite.y) return true
-    if (lowerBound>this._mapService.MAX_Y && newY>sprite.y) return true
+    if (leftBound<1 && newX<oldX) return true
+    if (rightBound>this._mapService.MAX_X && newX>oldX) return true
+    if (upperBound<1 && newY<oldY) return true
+    if (lowerBound>this._mapService.MAX_Y && newY>oldY) return true
     return false
   }
   detectCollision(mySprite: Sprite, targetSprite: Sprite) {
@@ -49,7 +49,12 @@ export class CollisionService {
     || (leftBound<targetRightBound && targetRightBound<rightBound)) {
       if ((upperBound<targetUpperBound && targetUpperBound<lowerBound)
       || (upperBound<targetLowerBound && targetLowerBound<lowerBound)) {
-        targetSprite.scale=0; console.log("collision")
+        if (targetSprite.type == 'prey') {
+          targetSprite.scale = 0
+        }
+        else if (targetSprite.type == 'predator'){
+          //to be filled
+        }
       }
     }
   }

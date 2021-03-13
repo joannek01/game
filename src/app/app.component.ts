@@ -2,8 +2,10 @@ import { HostListener } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import Two from '../assets/two.min.js';
 import { AiService } from './services/ai.service.js';
+import { AudioService } from './services/audio.service.js';
 import { CameraService } from './services/camera.service';
 import { CollisionService } from './services/collision.service.js';
+import { GameService } from './services/game.service.js';
 import { MapService } from './services/map.service.js';
 import { SpriteService } from './services/sprite.service';
 
@@ -26,7 +28,9 @@ export class AppComponent implements OnInit {
     private _cameraService: CameraService, 
     private _aiService: AiService, 
     private _mapService: MapService,
-    private _collisionService: CollisionService) {}
+    private _collisionService: CollisionService,
+    private _audioService: AudioService,
+    private _gameService: GameService,) {}
 
   @HostListener('document:keydown', ['$event'])
   handleKey(event: any) {
@@ -56,12 +60,18 @@ export class AppComponent implements OnInit {
     };
     let two = new Two(params).appendTo(elem);
 
+    document.addEventListener('click', ()=>{
+      this._audioService.playBackgroundMusic();
+    })
+
     this._mapService.init(two);
     this._cameraService.init(this.max_x, this.max_y);
     this._spriteService.populateMadcloud (3);
     this._spriteService.populateCoin (100);
     this._spriteService.populateCloud (2);
     this._spriteService.populateStar (4);
+
+    this._gameService.initScore(two,100);
 
     for (let i=this._spriteService.sprites.length-1; i>=0; i--) {
       let sprite=this._spriteService.sprites[i];
@@ -71,7 +81,7 @@ export class AppComponent implements OnInit {
     }
     
     two.bind('update', (framesPerSecond)=>{
-      if (!this._collisionService.detectBorder(this._spriteService.sprites[0], this.x, this.y)) { 
+      if (!this._collisionService.detectBorder(this._spriteService.sprites[0], this.x, this.y, this._spriteService.sprites[0].x, this._spriteService.sprites[0].y)) { 
         this._spriteService.sprites[0].spriteReference.translation.x=this.x;
         this._spriteService.sprites[0].x = this.x;
         this._spriteService.sprites[0].spriteReference.translation.y=this.y;
@@ -89,7 +99,7 @@ export class AppComponent implements OnInit {
             let oldX = this._spriteService.sprites[i].x
             let oldY = this._spriteService.sprites[i].y
             this._spriteService.sprites[i] = this._aiService.basicAI(this._spriteService.sprites[i]);
-            if (!this._collisionService.detectBorder(this._spriteService.sprites[i], this._spriteService.sprites[i].x, this._spriteService.sprites[i].y)) {
+            if (!this._collisionService.detectBorder(this._spriteService.sprites[i], this._spriteService.sprites[i].x, this._spriteService.sprites[i].y, oldX, oldY)) {
             this._spriteService.sprites[i].spriteReference.translation.x = this._spriteService.sprites[i].x;
             this._spriteService.sprites[i].spriteReference.translation.y = this._spriteService.sprites[i].y;
             this._spriteService.sprites[i].spriteReference.scale = this._spriteService.sprites[i].scale;
@@ -111,7 +121,13 @@ export class AppComponent implements OnInit {
             }
           }
         }
-        
+        let numberOfCoins = 0;
+        for (let sprite of this._spriteService.sprites) {
+          if (sprite.type=='prey' && sprite.spriteReference.scale>0) {
+            numberOfCoins++
+          }
+        }
+        this._gameService.displayScore(this.x, this.y, numberOfCoins);
     }).play();
   }
 

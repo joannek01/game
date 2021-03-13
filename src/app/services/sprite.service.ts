@@ -10,6 +10,7 @@ export interface Sprite {
   acceleration: number;
   scale: number;
   playable: boolean;
+  type: string;
 
   url: string;
   fps: number; //frames per second
@@ -31,6 +32,7 @@ export interface Sprite {
 export class SpriteService {
   coin:Sprite={
     name: 'Coin',
+    type: 'prey',
     visibility: true,
     state: 0,
     direction: 'right',
@@ -51,6 +53,7 @@ export class SpriteService {
   };
   cloud:Sprite={
     name: 'Cloud',
+    type: 'object',
     visibility: true,
     state: 0,
     direction: 'right',
@@ -71,6 +74,7 @@ export class SpriteService {
   };
   madcloud:Sprite={
   name: 'Madcloud',
+  type: 'predator',
   visibility: true,
   state: 0,
   direction: 'right',
@@ -91,6 +95,7 @@ export class SpriteService {
   };
     star:Sprite={
     name: 'Star',
+    type: 'object',
     visibility: true,
     state: 0,
     direction: 'right',
@@ -112,6 +117,7 @@ export class SpriteService {
   sprites:Sprite[]=[
     {
       name: 'Birb',
+      type: 'self',
       visibility: true,
       state: 0,
       direction: 'right',
