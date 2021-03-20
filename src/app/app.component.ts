@@ -24,6 +24,8 @@ export class AppComponent implements OnInit {
   max_x: number= 3000;
   max_y: number= 3000;
 
+  gameState: string = '';
+
   constructor(private _spriteService: SpriteService, 
     private _cameraService: CameraService, 
     private _aiService: AiService, 
@@ -62,6 +64,9 @@ export class AppComponent implements OnInit {
 
     document.addEventListener('click', ()=>{
       this._audioService.playBackgroundMusic();
+      if (this.gameState == 'opening') {
+        this._gameService.state = 'playing';
+      }
     })
 
     this._mapService.init(two);
@@ -79,25 +84,52 @@ export class AppComponent implements OnInit {
       this._spriteService.sprites[i].spriteReference.play(this._spriteService.sprites[i].rightFrames[0], this._spriteService.sprites[i].rightFrames[1]);
       this._spriteService.sprites[i].spriteReference.scale=this._spriteService.sprites[i].scale;
     }
+
+    this._gameService.stateObservable.subscribe((value)=>{
+      this.gameState = value;
+      switch(value) {
+        case 'opening':
+        this._gameService.displayTitle(two)
+        break;
+      case 'playing':
+        this._gameService.hideTitle();
+        //this._gameService.initScore(two);
+        break;
+      }
+    })
     
     two.bind('update', (framesPerSecond)=>{
+      if (this.gameState == 'opening') {
+        this.opening(two);
+      }
+      else if (this.gameState == 'playing') {
+
+      }
+    }).play();
+  }
+
+  opening(two:any) {
+    this._gameService.animateTitle()
+  }
+
+    playing(two: any, auto = false){
       if (!this._collisionService.detectBorder(this._spriteService.sprites[0], this.x, this.y, this._spriteService.sprites[0].x, this._spriteService.sprites[0].y)) { 
         this._spriteService.sprites[0].spriteReference.translation.x=this.x;
         this._spriteService.sprites[0].x = this.x;
         this._spriteService.sprites[0].spriteReference.translation.y=this.y;
         this._spriteService.sprites[0].y = this.y;
-        this._cameraService.zoomCamera(this.x, this.y)
+        this._cameraService.zoomCamera(this.x, this.y);
       } 
       else {
-        this.x = this._spriteService.sprites[0].x
-        this.y = this._spriteService.sprites[0].y
+        this.x = this._spriteService.sprites[0].x;
+        this.y = this._spriteService.sprites[0].y;
       }
       
     for (let i= this._spriteService.sprites.length-1; i>=0; i--) {
           if (i>0) {
-            if (!this._spriteService.sprites[i]) continue
-            let oldX = this._spriteService.sprites[i].x
-            let oldY = this._spriteService.sprites[i].y
+            if (!this._spriteService.sprites[i]) continue;
+            let oldX = this._spriteService.sprites[i].x;
+            let oldY = this._spriteService.sprites[i].y;
             this._spriteService.sprites[i] = this._aiService.basicAI(this._spriteService.sprites[i]);
             if (!this._collisionService.detectBorder(this._spriteService.sprites[i], this._spriteService.sprites[i].x, this._spriteService.sprites[i].y, oldX, oldY)) {
             this._spriteService.sprites[i].spriteReference.translation.x = this._spriteService.sprites[i].x;
@@ -105,8 +137,8 @@ export class AppComponent implements OnInit {
             this._spriteService.sprites[i].spriteReference.scale = this._spriteService.sprites[i].scale;
             }
             else {
-              this._spriteService.sprites[i].x=oldX
-              this._spriteService.sprites[i].y=oldY
+              this._spriteService.sprites[i].x=oldX;
+              this._spriteService.sprites[i].y=oldY;
             }
             this._collisionService.detectCollision(this._spriteService.sprites[0], this._spriteService.sprites[i]);
           }
@@ -128,10 +160,8 @@ export class AppComponent implements OnInit {
           }
         }
         this._gameService.displayScore(this.x, this.y, numberOfCoins);
-    }).play();
-  }
+    }
 
   title = 'Game';
-
 
 }
