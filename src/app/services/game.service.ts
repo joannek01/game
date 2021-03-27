@@ -23,6 +23,9 @@ export class GameService {
   private _subtitle: any;
   private _increment: number = 0.2;
 
+  private _gameover: any;
+  private _gameover2: any;
+
   initScore(two: any, numberOfCoins) {
     this._coin = two.makeSprite(this._spriteService.coin.url, this._defaultX, this._defaultY,
       this._spriteService.coin.columns, this._spriteService.coin.rows, this._spriteService.coin.fps);
@@ -90,4 +93,30 @@ export class GameService {
      this._title.scale = this._title.scale+this._increment;
      this._subtitle.scale = this._subtitle.scale+this._increment;
    }
+
+   displayGameover(two: any) {
+    this._gameover = new Two.Text('Game Over!', 650, 250, 'normal');
+    this._gameover.fill = 'yellow'; 
+    this._gameover.stroke = 'orange';
+    this._gameover.scale = 11;
+    this._gameover.linewidth = 0.7;
+    two.add(this._gameover);
+    this._gameover2 = new Two.Text('Click anywhere to restart', 650, 350, 'normal');
+    this._gameover2.fill = 'orange';
+    this._gameover2.stroke = 'yellow';
+    this._gameover2.scale = 5;
+    two.add(this._gameover2);
+   }
+
+   //switch(variable) {
+   // case 0:
+   //  console.log('0')
+   //  break;
+   // case 1:
+   //  console.log('1')
+   //  break;
+   // case 2:
+   //  console.log('2')
+   //  break;
+   // }
 }

@@ -101,9 +101,10 @@ export class AppComponent implements OnInit {
     two.bind('update', (framesPerSecond)=>{
       if (this.gameState == 'opening') {
         this.opening(two);
+        this.playing(two, true);
       }
       else if (this.gameState == 'playing') {
-
+        this.playing(two);
       }
     }).play();
   }
@@ -112,21 +113,23 @@ export class AppComponent implements OnInit {
     this._gameService.animateTitle()
   }
 
-    playing(two: any, auto = false){
-      if (!this._collisionService.detectBorder(this._spriteService.sprites[0], this.x, this.y, this._spriteService.sprites[0].x, this._spriteService.sprites[0].y)) { 
-        this._spriteService.sprites[0].spriteReference.translation.x=this.x;
-        this._spriteService.sprites[0].x = this.x;
-        this._spriteService.sprites[0].spriteReference.translation.y=this.y;
-        this._spriteService.sprites[0].y = this.y;
-        this._cameraService.zoomCamera(this.x, this.y);
-      } 
-      else {
-        this.x = this._spriteService.sprites[0].x;
-        this.y = this._spriteService.sprites[0].y;
+    playing(two: any, autopilot = false){
+      if (!autopilot){
+        if (!this._collisionService.detectBorder(this._spriteService.sprites[0], this.x, this.y, this._spriteService.sprites[0].x, this._spriteService.sprites[0].y)) { 
+          this._spriteService.sprites[0].spriteReference.translation.x=this.x;
+          this._spriteService.sprites[0].x = this.x;
+          this._spriteService.sprites[0].spriteReference.translation.y=this.y;
+          this._spriteService.sprites[0].y = this.y;
+          this._cameraService.zoomCamera(this.x, this.y);
+        } 
+        else {
+          this.x = this._spriteService.sprites[0].x;
+          this.y = this._spriteService.sprites[0].y;
+        }
       }
       
     for (let i= this._spriteService.sprites.length-1; i>=0; i--) {
-          if (i>0) {
+          if (i>0 || autopilot) {
             if (!this._spriteService.sprites[i]) continue;
             let oldX = this._spriteService.sprites[i].x;
             let oldY = this._spriteService.sprites[i].y;
@@ -151,6 +154,7 @@ export class AppComponent implements OnInit {
             else {
               this._spriteService.sprites[i].spriteReference.play(this._spriteService.sprites[i].leftFrames[0], this._spriteService.sprites[i].leftFrames[1])
             }
+            if (!autopilot) this._collisionService.detectCollision(this._spriteService.sprites[0], this._spriteService.sprites[i]);
           }
         }
         let numberOfCoins = 0;
