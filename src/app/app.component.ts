@@ -69,13 +69,61 @@ export class AppComponent implements OnInit {
       }
     })
 
-    this._mapService.init(two);
-    this._cameraService.init(this.max_x, this.max_y);
+    this.initialize(two);
+
+    this._gameService.stateObservable.subscribe((value)=>{
+      this.gameState = value;
+      switch(value) {
+        case 'opening':
+        this._gameService.displayTitle(two)
+        break;
+      case 'playing':
+        this.initialize(two);
+        //this._gameService.hideTitle();
+        //this._gameService.initScore(two);
+        break;
+      case 'gameover':
+        this._gameService.displayGameover(two);
+        break;
+      }
+    })
+
+    two.bind('update', (framesPerSecond)=>{
+      if (this.gameState == 'opening') {
+        this.opening(two);
+        this.playing(two, true);
+      }
+      else if (this.gameState == 'playing') {
+        this.playing(two);
+      }
+      else if (this.gameState == 'gameover') {
+        //nothing happens here
+      }
+    }).play();
+  }
+
+  initialize(two: any) {
+    for (let i=this._spriteService.sprites.length-1; i>0; i--) {
+      this._spriteService.sprites[i].scale = 0;
+      if (this._spriteService.sprites[i].spriteReference) {
+        this._spriteService.sprites[i].spriteReference.scale = 0
+      }
+      this._spriteService.sprites.splice(i,1)
+    }
+    this._spriteService.sprites[0].x = 200;
+    this._spriteService.sprites[0].y = 200;
+    this._spriteService.sprites[0].state = 0;
+
+    if(this._spriteService.sprites[0].spriteReference) this._spriteService.sprites[0].spriteReference.scale = 0;
+
+    this.x = 200;
+    this.y = 200;
     this._spriteService.populateMadcloud (3);
     this._spriteService.populateCoin (100);
     this._spriteService.populateCloud (2);
     this._spriteService.populateStar (4);
-
+    this._mapService.init(two);
+    this._cameraService.init(this.max_x, this.max_y);
     this._gameService.initScore(two,100);
 
     for (let i=this._spriteService.sprites.length-1; i>=0; i--) {
@@ -85,28 +133,6 @@ export class AppComponent implements OnInit {
       this._spriteService.sprites[i].spriteReference.scale=this._spriteService.sprites[i].scale;
     }
 
-    this._gameService.stateObservable.subscribe((value)=>{
-      this.gameState = value;
-      switch(value) {
-        case 'opening':
-        this._gameService.displayTitle(two)
-        break;
-      case 'playing':
-        this._gameService.hideTitle();
-        //this._gameService.initScore(two);
-        break;
-      }
-    })
-    
-    two.bind('update', (framesPerSecond)=>{
-      if (this.gameState == 'opening') {
-        this.opening(two);
-        this.playing(two, true);
-      }
-      else if (this.gameState == 'playing') {
-        this.playing(two);
-      }
-    }).play();
   }
 
   opening(two:any) {
@@ -126,6 +152,9 @@ export class AppComponent implements OnInit {
           this.x = this._spriteService.sprites[0].x;
           this.y = this._spriteService.sprites[0].y;
         }
+      }
+      if (this._spriteService.sprites[0].state <0 ) {
+        this._gameService.state= 'gameover'
       }
       
     for (let i= this._spriteService.sprites.length-1; i>=0; i--) {

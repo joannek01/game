@@ -54,6 +54,7 @@ export class CollisionService {
         }
         else if (targetSprite.type == 'predator'){
           //to be filled
+          mySprite.state = -1;
         }
       }
     }
