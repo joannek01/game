@@ -8,6 +8,7 @@ import { CollisionService } from './services/collision.service.js';
 import { GameService } from './services/game.service.js';
 import { MapService } from './services/map.service.js';
 import { SpriteService } from './services/sprite.service';
+import { Stage, StageService } from './services/stage.service.js';
 
 
 @Component({
@@ -25,6 +26,8 @@ export class AppComponent implements OnInit {
   max_y: number= 3000;
 
   gameState: string = '';
+  gameStage: number = 0;
+  stageData: Stage;
 
   constructor(private _spriteService: SpriteService, 
     private _cameraService: CameraService, 
@@ -32,7 +35,8 @@ export class AppComponent implements OnInit {
     private _mapService: MapService,
     private _collisionService: CollisionService,
     private _audioService: AudioService,
-    private _gameService: GameService,) {}
+    private _gameService: GameService,
+    private _stageService: StageService,) {}
 
   @HostListener('document:keydown', ['$event'])
   handleKey(event: any) {
@@ -64,7 +68,7 @@ export class AppComponent implements OnInit {
 
     document.addEventListener('click', ()=>{
       this._audioService.playBackgroundMusic();
-      if (this.gameState == 'opening') {
+      if (this.gameState == 'opening' || this.gameState=='gameover' || this.gameState=='gameClear') {
         this._gameService.state = 'playing';
       }
     })
@@ -78,14 +82,22 @@ export class AppComponent implements OnInit {
         this._gameService.displayTitle(two)
         break;
       case 'playing':
+        this._gameService.hideTitle();
         this.initialize(two);
-        //this._gameService.hideTitle();
         //this._gameService.initScore(two);
         break;
       case 'gameover':
         this._gameService.displayGameover(two);
         break;
+      case 'gameClear':
+        this._gameService.displayGameClear(two)
+        break;
       }
+    })
+
+    this._gameService.stageObservable.subscribe((value)=>{
+      this.gameStage = value;
+      this.stageData = this._stageService.stages[this.gameStage]
     })
 
     two.bind('update', (framesPerSecond)=>{
@@ -119,12 +131,12 @@ export class AppComponent implements OnInit {
     this.x = 200;
     this.y = 200;
     this._spriteService.populateMadcloud (3);
-    this._spriteService.populateCoin (100);
+    this._spriteService.populateCoin (10);
     this._spriteService.populateCloud (2);
     this._spriteService.populateStar (4);
     this._mapService.init(two);
     this._cameraService.init(this.max_x, this.max_y);
-    this._gameService.initScore(two,100);
+    this._gameService.initScore(two,10);
 
     for (let i=this._spriteService.sprites.length-1; i>=0; i--) {
       let sprite=this._spriteService.sprites[i];
@@ -156,7 +168,7 @@ export class AppComponent implements OnInit {
       if (this._spriteService.sprites[0].state <0 ) {
         this._gameService.state= 'gameover'
       }
-      
+
     for (let i= this._spriteService.sprites.length-1; i>=0; i--) {
           if (i>0 || autopilot) {
             if (!this._spriteService.sprites[i]) continue;
@@ -192,8 +204,11 @@ export class AppComponent implements OnInit {
             numberOfCoins++
           }
         }
-        this._gameService.displayScore(this.x, this.y, numberOfCoins);
-    }
+        if (numberOfCoins==0) {
+          this._gameService.state = 'gameClear'
+        }
+        if (!autopilot) this._gameService.displayScore(this.x, this.y, numberOfCoins);
+      }
 
   title = 'Game';
 

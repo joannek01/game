@@ -26,6 +26,29 @@ export class GameService {
   private _gameover: any;
   private _gameover2: any;
 
+  private _gameClear: any;
+  private _gameClear2: any;
+
+  private _state = new BehaviorSubject<string>('opening');
+  public stateObservable = this._state.asObservable();
+
+  private _stage = new BehaviorSubject<number>(0);
+  public stageObservable = this._stage.asObservable();
+
+  get state() {
+    return this._state.getValue();
+  }
+  set state(value) {
+    this._state.next(value);
+  }
+
+  get stage() {
+    return this._stage.getValue();
+  }
+  set stage(value) {
+    this._stage.next(value);
+  }
+
   initScore(two: any, numberOfCoins) {
     this._coin = two.makeSprite(this._spriteService.coin.url, this._defaultX, this._defaultY,
       this._spriteService.coin.columns, this._spriteService.coin.rows, this._spriteService.coin.fps);
@@ -36,16 +59,6 @@ export class GameService {
     this._score.stroke = '#FFFFFF';
     this._score.scale = 1.75;
     two.add(this._score);
-  }
-
-  private _state = new BehaviorSubject<string>('opening')
-  public stateObservable = this._state.asObservable()
-  
-  get state() {
-    return this._state.getValue()
-  }
-  set state(value) {
-    this._state.next(value)
   }
 
   displayScore(x: number, y: number, num: number){
@@ -81,7 +94,13 @@ export class GameService {
    hideTitle() {
      this._title.scale = 0;
      this._subtitle.scale = 0;
-   }
+     if (this._gameover) this._gameover.scale = 0
+     if (this._gameover2) this._gameover2.scale = 0
+     if (this._gameClear) this._gameClear.scale = 0
+     if (this._gameClear2) this._gameClear2.scale = 0
+     if (this._coin) this._coin.scale = 0
+     if (this._score) this._score.scale = 0
+    }
 
    animateTitle(){
      if (this._title.scale>12) {
@@ -108,6 +127,19 @@ export class GameService {
     two.add(this._gameover2);
    }
 
+   displayGameClear(two: any) {
+    this._gameClear = new Two.Text('Game Clear', 650, 250, 'normal');
+    this._gameClear.fill = 'yellow'; 
+    this._gameClear.stroke = 'orange';
+    this._gameClear.scale = 11;
+    this._gameClear.linewidth = 0.7;
+    two.add(this._gameClear);
+    this._gameClear2 = new Two.Text('Click anywhere to restart', 650, 350, 'normal');
+    this._gameClear2.fill = 'orange';
+    this._gameClear2.stroke = 'yellow';
+    this._gameClear2.scale = 5;
+    two.add(this._gameClear2);
+   }
    //switch(variable) {
    // case '0':
    //  console.log('0')
@@ -119,4 +151,26 @@ export class GameService {
    //  console.log('2')
    //  break;
    // }
+
+  /* 
+  let sum = 0;
+    for (let i = 1; i<=100; i++) {
+      sum = sum+i;
+    }
+    console.log(sum);
+  */
+
+  /* math.pow(10,2)
+  = 100
+  */
+
+  /*
+  let total=0;
+  for (let i=0, i<100; i++){
+    if (i%2>0){
+      total=total+1;
+    }
+  }
+  console.log(total);
+  */
 }
