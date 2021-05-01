@@ -78,13 +78,13 @@ export class GameService {
   }
   
   displayTitle(two: any) {
-    this._title = new Two.Text('Birb Game', 650, 250, 'normal');
+    this._title = new Two.Text('Birb Game', window.scrollX+(window.innerWidth/2), window.scrollY+(window.innerHeight/2)-50, 'normal');
     this._title.fill = 'yellow'; 
     this._title.stroke = 'orange';
     this._title.scale = 11;
     this._title.linewidth = 0.7;
     two.add(this._title);
-    this._subtitle = new Two.Text('Click anywhere to begin', 650, 350, 'normal');
+    this._subtitle = new Two.Text('Click anywhere to begin', window.scrollX+(window.innerWidth/2), window.scrollY+(window.innerHeight/2)+50, 'normal');
     this._subtitle.fill = 'orange';
     this._subtitle.stroke = 'yellow';
     this._subtitle.scale = 5;
@@ -114,27 +114,35 @@ export class GameService {
    }
 
    displayGameover(two: any) {
-    this._gameover = new Two.Text('Game Over!', 650, 250, 'normal');
+    this._gameover = new Two.Text('Game Over!', window.scrollX+(window.innerWidth/2), window.scrollY+(window.innerHeight/2)-50, 'normal');
     this._gameover.fill = 'yellow'; 
     this._gameover.stroke = 'orange';
     this._gameover.scale = 11;
     this._gameover.linewidth = 0.7;
     two.add(this._gameover);
-    this._gameover2 = new Two.Text('Click anywhere to restart', 650, 350, 'normal');
+    this._gameover2 = new Two.Text('Click anywhere to restart', window.scrollX+(window.innerWidth/2), window.scrollY+(window.innerHeight/2)+50, 'normal');
     this._gameover2.fill = 'orange';
     this._gameover2.stroke = 'yellow';
     this._gameover2.scale = 5;
     two.add(this._gameover2);
    }
 
-   displayGameClear(two: any) {
-    this._gameClear = new Two.Text('Game Clear', 650, 250, 'normal');
+   displayGameClear(two: any, stage: number, maxStage: number) {
+    this._gameClear = new Two.Text('Game Clear', window.scrollX+(window.innerWidth/2), window.scrollY+(window.innerHeight/2)-50, 'normal');
     this._gameClear.fill = 'yellow'; 
     this._gameClear.stroke = 'orange';
     this._gameClear.scale = 11;
     this._gameClear.linewidth = 0.7;
     two.add(this._gameClear);
-    this._gameClear2 = new Two.Text('Click anywhere to restart', 650, 350, 'normal');
+    let textToSay = '';
+    if (stage+1<=maxStage) {
+      textToSay = 'Click anywhere to advance to stage' +(stage+1);
+    }
+    else {
+      textToSay = 'Click anywhere to restart'
+    }
+
+    this._gameClear2 = new Two.Text(textToSay, window.scrollX+(window.innerWidth/2), window.scrollY+(window.innerHeight/2)+50, 'normal');
     this._gameClear2.fill = 'orange';
     this._gameClear2.stroke = 'yellow';
     this._gameClear2.scale = 5;
@@ -152,23 +160,32 @@ export class GameService {
    //  break;
    // }
 
-  /* 
+  /* Iterations in Javascript
+     1. FOR LOOP - will terminate
+     2. WHILE LOOP - will not terminate
+  
+  FOR LOOP EXAMPLES:
   let sum = 0;
     for (let i = 1; i<=100; i++) {
       sum = sum+i;
     }
     console.log(sum);
-  */
+    
+  math.pow(10,2)
+    = 100
 
-  /* math.pow(10,2)
-  = 100
-  */
-
-  /*
   let total=0;
-  for (let i=0, i<100; i++){
+  for (let i=0; i<100; i++){
     if (i%2>0){
       total=total+1;
+    }
+  }
+  console.log(total);
+  
+  let total = 0;
+  for (let i=0; i<=100; i++){
+    if (i%2 == 0){
+      total=total+i;
     }
   }
   console.log(total);
