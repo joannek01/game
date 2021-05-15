@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { MapService } from './map.service';
 
 export interface Sprite {
   name: string;
@@ -139,13 +140,19 @@ export class SpriteService {
     
   ];
 
-  constructor() { }
+  private _max_x = 0;
+  private _max_y = 0;
+
+  constructor(private _mapService: MapService) {
+    this._max_x = this._mapService.MAX_X;
+    this._max_y = this._mapService.MAX_Y;
+   }
 
   populateCoin(numberToPopulate: number) {
     for (let i=0; i<numberToPopulate; i++) {
       let coin = this.coin;
-      this.coin.x = Math.floor(Math.random() * 50* i);
-      this.coin.y = Math.floor(Math.random() * 50* i);
+      coin.x = Math.floor(Math.random() * ((this._max_x/numberToPopulate))+(this._max_x/numberToPopulate)* i);
+      coin.y = Math.floor(Math.random() * 50* i);
       this.sprites.push(JSON.parse(JSON.stringify(coin)));
     }
   };
@@ -153,7 +160,7 @@ export class SpriteService {
   populateMadcloud(numberToPopulate: number) {
     for (let i=0; i<numberToPopulate; i++) {
       let Madcloud = this.madcloud;
-      this.madcloud.x = Math.floor(Math.random() * 300* i);
+      this.madcloud.x = Math.floor(Math.random() * ((this._max_x/numberToPopulate))+(this._max_x/numberToPopulate)* i);
       this.madcloud.y = Math.floor(Math.random() * 300* i);
       this.sprites.push(JSON.parse(JSON.stringify(Madcloud)));
     }
@@ -162,7 +169,7 @@ export class SpriteService {
   populateCloud(numberToPopulate: number) {
     for (let i=0; i<numberToPopulate; i++) {
       let cloud = this.cloud;
-      this.cloud.x = Math.floor(Math.random() * 300* i);
+      this.cloud.x = Math.floor(Math.random() * ((this._max_x/numberToPopulate))+(this._max_x/numberToPopulate)* i);
       this.cloud.y = Math.floor(Math.random() * 300* i);
       this.sprites.push(JSON.parse(JSON.stringify(cloud)));
     }
@@ -171,7 +178,7 @@ export class SpriteService {
   populateStar(numberToPopulate: number) {
     for (let i=0; i<numberToPopulate; i++) {
       let star = this.star;
-      this.star.x = Math.floor(Math.random() * 300* i);
+      this.star.x = Math.floor(Math.random() * ((this._max_x/numberToPopulate))+(this._max_x/numberToPopulate)* i);
       this.star.y = Math.floor(Math.random() * 300* i);
       this.sprites.push(JSON.parse(JSON.stringify(star)));
     }
