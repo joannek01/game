@@ -207,7 +207,7 @@ export class AppComponent implements OnInit {
         if (numberOfCoins==0) {
           this._gameService.state = 'gameClear'
           this._gameService.stage = this.gameStage+1;
-
+          this._audioService.success();
         }
         if (!autopilot) this._gameService.displayScore(this.x, this.y, numberOfCoins);
       }

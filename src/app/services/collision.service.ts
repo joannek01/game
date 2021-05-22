@@ -1,5 +1,6 @@
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Injectable } from '@angular/core';
+import { AudioService } from './audio.service';
 import { MapService } from './map.service';
 import { Sprite } from './sprite.service';
 
@@ -8,7 +9,9 @@ import { Sprite } from './sprite.service';
 })
 export class CollisionService {
 
-  constructor(private _mapService: MapService) { }
+  constructor
+  (private _mapService: MapService,
+   private _audioService: AudioService) {}
 
   detectBorder(sprite: Sprite, newX: number, newY: number, oldX: number, oldY: number) {
     const OFFSET = 2;
@@ -51,10 +54,12 @@ export class CollisionService {
       || (upperBound<targetLowerBound && targetLowerBound<lowerBound)) {
         if (targetSprite.type == 'prey') {
           targetSprite.scale = 0
+          this._audioService.score();
         }
         else if (targetSprite.type == 'predator'){
           //to be filled
           mySprite.state = -1;
+          this._audioService.fail();
         }
       }
     }
