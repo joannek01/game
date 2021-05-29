@@ -31,14 +31,14 @@ export class AudioService {
 
   fail() {
     let audio = new Audio();
-    audio.src = "../../assets/audio.fail.wav";
+    audio.src = "../../assets/audio/fail.wav";
     audio.load();
     audio.play();
   }
 
   score() {
     let audio = new Audio();
-    audio.src = "../../assets/audio.score.wav";
+    audio.src = "../../assets/audio/score.wav";
     audio.load();
     audio.play();
   }
